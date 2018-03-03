@@ -79,3 +79,17 @@ fun encode (l as (x::_)) =
         List.map (fn e => ((List.length e), (List.hd e))) p
     end
   | encode [] = []
+
+(* #11 *)
+datatype 'a rle =
+         ONE of 'a
+         | MANY of int * 'a
+
+fun encode_rle l =
+    let
+        val enc = encode l
+    in
+        List.map (fn e => case e of
+                              (1, x) => ONE x
+                            | (n, x) => MANY (n, x)) enc
+    end
