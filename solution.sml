@@ -39,7 +39,7 @@ fun is_palindrome l = l = (rev l)
 (* #7 *)
 datatype 'a node =
          ONE of 'a
-       | MANY of 'a node list
+         | MANY of 'a node list
 
 fun flattern [] = []
   | flattern ((ONE x)::rest) = x::(flattern rest)
@@ -51,19 +51,31 @@ fun compress (x::y::rest) =
     if x = y then
         compress (y::rest)
     else
-        x::y::(compress rest)
+        x::(compress (y::rest))
   | compress l = l
 
 (* #9 *)
-fun pack (l as x::y::rest) =
+fun pack l =
     let
         fun pack_acc acc l =
-            if x = y then
-                pack_acc (acc @ [x]) (y::rest)
-            else
-                (acc @ [x])::(pack (y::rest))
+            case l of
+                x::y::rest =>
+                if x = y then
+                    pack_acc (acc @ [x]) (y::rest)
+                else
+                    (acc @ [x])::(pack (y::rest))
+              | [] => [acc]
+              | x::[] => [acc @ [x]]
+
     in
         pack_acc [] l
     end
-  | pack [] = []
-  | pack (x::[]) = [[x]]
+
+(* #10 *)
+fun encode (l as (x::_)) =
+    let
+        val p = pack l
+    in
+        List.map (fn e => ((List.length e), (List.hd e))) p
+    end
+  | encode [] = []
