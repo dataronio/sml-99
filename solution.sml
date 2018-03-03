@@ -89,9 +89,12 @@ fun encode_rle l =
     let
         val enc = encode l
     in
-        List.map (fn e => case e of
-                              (1, x) => ONE x
-                            | (n, x) => MANY (n, x)) enc
+        List.map (fn e =>
+                     case e of
+                         (1, x) => ONE x
+                       | (n, x) => if n > 1 then MANY (n, x)
+                                   else raise AssertionFail)
+                 enc
     end
 
 (* #31 *)
