@@ -93,3 +93,16 @@ fun encode_rle l =
                               (1, x) => ONE x
                             | (n, x) => MANY (n, x)) enc
     end
+
+(* #31 *)
+fun is_prime 1 = true
+  | is_prime 2 = true
+  | is_prime n =
+    let
+        fun test_mod k =
+            if k * k > n then true
+            else if n mod k = 0 then false
+            else test_mod (k+1)
+    in
+        test_mod 2
+    end
