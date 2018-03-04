@@ -21,3 +21,8 @@ setup.log
 
 # binary
 solution
+
+# mlyacc
+*.mly.desc
+*.mly.sml
+*.mly.sig
