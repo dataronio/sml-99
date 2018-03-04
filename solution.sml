@@ -54,13 +54,13 @@ fun insert (dict, entry as (key, value)) =
     let
         fun insert' Empty = Red (entry, Empty, Empty)
           | insert' (Red (entry' as (key', value'), left, right)) =
-            (case String.compare (key, key')
-              of EQUAL => Red (entry, left, right)
+            (case String.compare (key, key') of
+                 EQUAL => Red (entry, left, right)
                | LESS => Red (entry', insert' left, right)
                | GREATER => Red (entry', left, insert' right))
           | insert' (Black (entry' as (key', value'), left, right)) =
-            (case String.compare (key, key')
-              of EQUAL => Black (entry, left, right)
+            (case String.compare (key, key') of
+                 EQUAL => Black (entry, left, right)
                | LESS => restoreLeft (Black (entry', insert' left, right))
                | GREATER => restoreRight (Black (entry', left, insert' right)))
     in
@@ -88,11 +88,12 @@ fun last_two l =
 
 (* #3 *)
 fun at k l =
-    case l of [] => Option.NONE
-            | x::rest => if k = 0 then
-                             x
-                         else
-                             at (k-1) rest
+    case l of
+        [] => Option.NONE
+      | x::rest => if k = 0 then
+                       x
+                   else
+                       at (k-1) rest
 
 (* #4 *)
 fun length [] = 0
@@ -106,9 +107,8 @@ fun rev [] = []
 fun is_palindrome l = l = (rev l)
 
 (* #7 *)
-datatype 'a node =
-         ONE of 'a
-         | MANY of 'a node list
+datatype 'a node = ONE of 'a
+                 | MANY of 'a node list
 
 fun flattern [] = []
   | flattern ((ONE x)::rest) = x::(flattern rest)
@@ -150,9 +150,8 @@ fun encode (l as (x::_)) =
   | encode [] = []
 
 (* #11 *)
-datatype 'a rle =
-         ONE of 'a
-         | MANY of int * 'a
+datatype 'a rle = ONE of 'a
+                | MANY of int * 'a
 
 fun encode_rle l =
     let
