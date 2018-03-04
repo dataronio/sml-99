@@ -52,5 +52,5 @@ EXP : NUM (NUM)
     | EXP CARAT EXP (let fun e (m, 0) = 1
                              e (m, 1) = m * e(m, l-1)
                      in
-                       e (EXP1, EXP2)
+                         e (EXP1, EXP2)
                      end)
