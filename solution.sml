@@ -165,6 +165,67 @@ fun encode_rle l =
                  enc
     end
 
+(* #12 *)
+fun decode_rle [] = []
+  | decode_rle (x::rest) =
+    let fun decode_single (ONE x) = [x]
+          | decode_single (MANY (n, x)) = List.tabulate (n, (fn _ => x))
+    in
+        (decode_single x) @ (decode_rle rest)
+    end
+
+(* #14 *)
+fun duplicate [] = []
+  | duplicate (x::rest) = [x, x] @ (duplicate rest)
+
+(* #15 *)
+fun replicate [] _ = []
+  | replicate (x::rest) k =
+    if k <= 0 then
+        []
+    else
+        List.tabulate (k, (fn _ => x)) @ (replicate rest k)
+
+(* #16 *)
+fun drop l k =
+    let
+        fun drop' prefix [] _ = prefix
+          | drop' prefix (x::rest) k =
+            if k = 0 then prefix @ rest
+            else drop' (prefix @ [x]) rest (k-1)
+    in
+        drop' [] l k
+    end
+
+(* #17 *)
+fun split l k =
+    let
+        fun split' prefix [] _ = (prefix, [])
+          | split' prefix (l' as (x::rest)) k =
+            if k = 0 then
+                (prefix, l')
+            else
+                split' (prefix @ [x]) rest (k-1)
+    in
+        split' [] l k
+    end
+
+(* #18 *)
+fun slice l a b =
+    let
+        val prefix = (#2 (split l a))
+    in
+        (#1 (split prefix (b-a)))
+    end
+
+(* #19 *)
+fun rotate l k =
+    let
+        val (a, b) = split l k
+    in
+        b @ a
+    end
+
 (* #31 *)
 fun is_prime 1 = true
   | is_prime 2 = true
