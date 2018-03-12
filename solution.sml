@@ -1,75 +1,9 @@
+structure Solution =
+struct
+
 exception AssertionFail
 
 fun println s = print (s ^ "\n")
-
-signature DICT =
-sig
-    type key = string
-    type 'a entry = key * 'a
-    type 'a dict
-    val empty : 'a dict
-    val insert : 'a dict * 'a entry -> 'a dict
-    val lookup : 'a dict * key -> 'a option
-end
-
-structure RedBlackTree :> DICT =
-struct
-type key = string
-type 'a entry = string * 'a
-datatype 'a dict = Empty
-                 | Red of 'a entry * 'a dict * 'a dict
-                 | Black of 'a entry * 'a dict * 'a dict
-val empty = Empty
-fun lookup (dict, key) =
-    let
-        fun internal_lookup Empty = NONE
-          | internal_lookup (Red tree) = internal_lookup' tree
-          | internal_lookup (Black tree) = internal_lookup' tree
-        and internal_lookup' ((k, v), left, right) =
-            case String.compare (k, key) of
-                EQUAL => SOME v
-              | LESS => internal_lookup left
-              | GREATER => internal_lookup right
-    in
-        internal_lookup dict
-    end
-
-fun restoreLeft
-        (Black (z, Red (y, Red (x, d1, d2), d3), d4)) =
-    Red (y, Black (x, d1, d2), Black (z, d3, d4))
-  | restoreLeft
-        (Black (z, Red (x, d1, Red (y, d2, d3)), d4)) =
-    Red (y, Black (x, d1, d2), Black (z, d3, d4))
-  | restoreLeft dict = dict
-
-fun restoreRight
-        (Black (x, d1, Red (y, d2, Red (z, d3, d4)))) =
-    Red (y, Black (x, d1, d2), Black (z, d3, d4))
-  | restoreRight
-        (Black (x, d1, Red (z, Red (y, d2, d3), d4))) =
-    Red (y, Black (x, d1, d2), Black (z, d3, d4))
-  | restoreRight dict = dict
-
-fun insert (dict, entry as (key, value)) =
-    let
-        fun insert' Empty = Red (entry, Empty, Empty)
-          | insert' (Red (entry' as (key', value'), left, right)) =
-            (case String.compare (key, key') of
-                 EQUAL => Red (entry, left, right)
-               | LESS => Red (entry', insert' left, right)
-               | GREATER => Red (entry', left, insert' right))
-          | insert' (Black (entry' as (key', value'), left, right)) =
-            (case String.compare (key, key') of
-                 EQUAL => Black (entry, left, right)
-               | LESS => restoreLeft (Black (entry', insert' left, right))
-               | GREATER => restoreRight (Black (entry', left, insert' right)))
-    in
-        case insert' dict of
-            Red (t as (_, Red _, _)) => Black t
-          | Red (t as (_, _, Red _)) => Black t
-          | dict => dict
-    end
-end
 
 (* #1 *)
 val rec last =
@@ -226,6 +160,17 @@ fun rotate l k =
         b @ a
     end
 
+(* #20 *)
+fun remove_at k l = drop l k
+
+(* #21 *)
+fun insert_at x k l =
+    let
+        val (a, b) = split l k
+    in
+        a @ [x] @ b
+    end
+
 (* #31 *)
 fun is_prime 1 = true
   | is_prime 2 = true
@@ -261,3 +206,5 @@ fun phi 1 = 1
     in
         phi_acc 0 1
     end
+
+end

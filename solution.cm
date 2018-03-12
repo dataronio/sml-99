@@ -1,0 +1,6 @@
+Library
+    structure Solution
+is
+    solution.sml
+
+    $/basis.cm
