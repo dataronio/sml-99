@@ -13,12 +13,12 @@ val rec last =
           |  _::rest => last rest
 
 (* #2 *)
-fun last_two l =
+fun lastTwo l =
     case l of
         [] => Option.NONE
      |  x::[] => Option.NONE
      | x::y::[] => Option.SOME (x, y)
-     | _::rest => last_two rest
+     | _::rest => lastTwo rest
 
 (* #3 *)
 fun at k l =
@@ -38,7 +38,7 @@ fun rev [] = []
   | rev (x::rest) = (rev rest) @ [x]
 
 (* #6 *)
-fun is_palindrome l = l = (rev l)
+fun isPalindrome l = l = (rev l)
 
 (* #7 *)
 datatype 'a node = ONE of 'a
@@ -87,7 +87,7 @@ fun encode (l as (x::_)) =
 datatype 'a rle = ONE of 'a
                 | MANY of int * 'a
 
-fun encode_rle l =
+fun encodeRle l =
     let
         val enc = encode l
     in
@@ -161,27 +161,61 @@ fun rotate l k =
     end
 
 (* #20 *)
-fun remove_at k l = drop l k
+fun removeAt k l = drop l k
 
 (* #21 *)
-fun insert_at x k l =
+fun insertAt x k l =
     let
         val (a, b) = split l k
     in
         a @ [x] @ b
     end
 
+(* #22 *)
+fun range a b = let
+    val step = if a < b then 1 else ~1
+    fun rangeAcc acc a' =
+        if a' = b then acc
+        else
+            rangeAcc (acc @ [a']) (a' + step)
+in
+    rangeAcc [] a
+end
+
+fun shuffle l = let
+    val r = Random.rand (0, 65536)
+    fun shuffleAcc acc [] = acc
+      | shuffleAcc acc l' = let
+          val k = (Random.randInt r) mod (List.length l')
+          val select = List.nth (l', k)
+      in
+          shuffleAcc (acc @ [select]) (removeAt k l')
+      end
+in
+    shuffleAcc [] l
+end
+
+(* #23 *)
+fun randomSelect l n = List.take ((shuffle l), n)
+
+(* #24 *)
+fun lottoSelect n m = randomSelect (range 1 (m+1)) n
+
+(* #25 *)
+val permutation = shuffle
+
+
 (* #31 *)
-fun is_prime 1 = true
-  | is_prime 2 = true
-  | is_prime n =
+fun isPrime 1 = true
+  | isPrime 2 = true
+  | isPrime n =
     let
-        fun test_mod k =
+        fun testMod k =
             if k * k > n then true
             else if n mod k = 0 then false
-            else test_mod (k+1)
+            else testMod (k+1)
     in
-        test_mod 2
+        testMod 2
     end
 
 (* #32 *)
