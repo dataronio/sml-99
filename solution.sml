@@ -230,15 +230,15 @@ fun coprime x y = gcd x y = 1
 fun phi 1 = 1
   | phi n =
     let
-        fun phi_acc acc k =
+        fun phiAcc acc k =
             if k = n then
                 acc
             else if coprime n k then
-                phi_acc (acc + 1) (k+1)
+                phiAcc (acc + 1) (k+1)
             else
-                phi_acc acc (k+1)
+                phiAcc acc (k+1)
     in
-        phi_acc 0 1
+        phiAcc 0 1
     end
 
 end
